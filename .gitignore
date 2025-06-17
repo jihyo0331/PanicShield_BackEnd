@@ -1,0 +1,11 @@
+# Go build
+/bin/
+/pkg/mod/
+/ps_backend
+
+# IDE
+.vscode/
+*.swp
+
+# OS
+.DS_Store
