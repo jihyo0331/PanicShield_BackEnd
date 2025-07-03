@@ -365,7 +365,6 @@
 
 ---
 
-```
 
 # PanicShield Back-End API Documentation
 
