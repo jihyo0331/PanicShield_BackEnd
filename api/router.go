@@ -14,7 +14,7 @@ func SetupRouter() *gin.Engine {
 		api.POST("/signup", handler.SignUp)
 		api.POST("/login", handler.Login)
 		api.POST("/chat", handler.ChatWithGemini)
-		api.POST("/reroute", handler.Reroute)
+		api.POST("/reroute", handler.Reroute) //추가
 
 	}
 

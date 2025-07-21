@@ -1,8 +1,8 @@
-package handler
+package handler //재탐색기
 
 import (
 	"net/http"
-	"ps_backend/pathfinder" // ✅ 여기랑
+	"ps_backend/pathfinder"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +21,7 @@ func Reroute(c *gin.Context) {
 		return
 	}
 
-	newPath := pathfinder.RecalculatePath( // ✅ 여기도
+	newPath := pathfinder.RecalculatePath( 
 		req.CurrentX, req.CurrentY,
 		req.TargetX, req.TargetY,
 	)

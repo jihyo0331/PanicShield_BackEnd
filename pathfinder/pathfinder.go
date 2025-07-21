@@ -1,4 +1,4 @@
-package pathfinder
+package pathfinder //경로 탐색기
 
 type Position struct {
 	X float64 `json:"x"`
