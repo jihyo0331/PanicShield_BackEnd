@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"ps_backend/db"
 	"ps_backend/model"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 var databaseI = db.GetDB()
@@ -22,11 +24,18 @@ func AddInterest(c *gin.Context) {
 		return
 	}
 
-	// 관심사 없으면 생성, 있으면 그대로 사용
 	var interest model.Interest
-	if err := databaseI.Where("name = ?", req.Interest).First(&interest).Error; err != nil {
+	err := databaseI.Where("name = ?", req.Interest).First(&interest).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		// Create new interest if not found
 		interest = model.Interest{Name: req.Interest}
-		databaseI.Create(&interest)
+		if err := databaseI.Create(&interest).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "관심사 생성 실패"})
+			return
+		}
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "관심사 조회 실패"})
+		return
 	}
 
 	userInterest := model.UserInterest{

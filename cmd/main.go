@@ -22,21 +22,20 @@ func main() {
 	// Load config
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8100"
+		port = "8010"
 	}
-	dsn := os.Getenv("DATABASE_DSN")
-	if dsn == "" {
-		dsn = "host=localhost user=psdb password=jmung002 dbname=ps_db port=5432 sslmode=disable"
-	}
-	corsOrigins := os.Getenv("CORS_ORIGINS") // comma-separated
+	// dsn := os.Getenv("DATABASE_DSN")
+	// if dsn == "" {
+	// 	dsn = "host=localhost user=psdb password=jmung002 dbname=ps_db port=5432 sslmode=disable"
+	// }
 
 	// Initialize logger
 	log := logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
 
 	// Connect database and run migrations
-	if _, err := db.ConnectAndMigrateWithDSN(dsn); err != nil {
-		log.Fatalf("Database connection failed: %v", err)
+	if _, err := db.ConnectAndMigrate(); err != nil {
+		log.Fatalf("Database migration failed: %v", err)
 	}
 
 	// Setup Gin
@@ -45,7 +44,12 @@ func main() {
 	router.Use(gin.LoggerWithWriter(log.Writer()), gin.Recovery())
 
 	// CORS
-	origins := strings.Split(corsOrigins, ",")
+	var origins []string
+	if corsOrigins := os.Getenv("CORS_ORIGINS"); corsOrigins == "" {
+		origins = []string{"*"}
+	} else {
+		origins = strings.Split(corsOrigins, ",")
+	}
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     origins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},

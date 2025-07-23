@@ -53,14 +53,6 @@ func (s *AuthService) GetUserByUsername(username string) (*model.User, error) {
 	return &user, nil
 }
 
-func (s *AuthService) ValidateOTP(userID uint, code string) bool {
-	// TODO: Implement OTP validation logic or import the correct package
-	return false
-}
-func (s *AuthService) MarkPhoneVerified(userID uint) error {
-	return s.db.Model(&model.User{}).Where("id = ?", userID).Update("phone_verified", true).Error
-}
-
 func (s *AuthService) RefreshJWT(refreshToken string) (string, error) {
 	refreshSecret := os.Getenv("REFRESH_SECRET")
 	if refreshSecret == "" {

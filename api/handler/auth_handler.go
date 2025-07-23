@@ -97,29 +97,6 @@ func SignIn(c *gin.Context) {
 	})
 }
 
-// VerifyPhone handles phone verification using OTP codes
-func VerifyPhone(c *gin.Context) {
-	var req dto.VerifyPhoneRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request: " + err.Error()})
-		return
-	}
-
-	// Validate OTP code
-	if !authSvc.ValidateOTP(req.UserID, req.Code) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired verification code"})
-		return
-	}
-
-	// Mark user as verified
-	if err := authSvc.MarkPhoneVerified(req.UserID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify phone"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Phone number verified"})
-}
-
 // RefreshToken issues a new JWT using a valid refresh token
 func RefreshToken(c *gin.Context) {
 	var req dto.RefreshTokenRequest

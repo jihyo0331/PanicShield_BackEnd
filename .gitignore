@@ -9,3 +9,9 @@
 
 # OS
 .DS_Store
+
+# Environment variables
+.env
+
+# Entrypoint script
+entrypoint.sh
